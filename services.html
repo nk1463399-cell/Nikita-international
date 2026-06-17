@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Услуги и цены — Никита International</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0a; --bg-secondary: #111111; --bg-card: #161616;
+            --bg-hover: #1c1c1c; --border: #2a2a2a; --border-light: #333333;
+            --text-primary: #ffffff; --text-secondary: #a0a0a0; --text-muted: #666666;
+            --accent-gold: #c9a84c; --accent-gold-hover: #d4b55a;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary); color: var(--text-secondary);
+            line-height: 1.6; overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-gold); }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate {
+            opacity: 1;
+            animation: fadeInUp 0.7s ease forwards;
+        }
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
+        .animate-delay-4 { animation-delay: 0.4s; }
+        
+        .header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between; height: 70px;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
+        .logo-icon {
+            width: 40px; height: 40px; background: var(--accent-gold); border-radius: 6px;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+            color: var(--bg-primary); font-weight: 700; flex-shrink: 0;
+        }
+        .logo-text { color: var(--text-primary); font-size: 1rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; white-space: nowrap; }
+        .logo-sub { font-size: 0.6rem; color: var(--accent-gold); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+        .nav { display: flex; gap: 32px; list-style: none; }
+        .nav a { color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s ease; position: relative; white-space: nowrap; }
+        .nav a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--accent-gold); transition: width 0.3s ease; }
+        .nav a:hover { color: var(--text-primary); }
+        .nav a:hover::after { width: 100%; }
+        .header-actions { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+        .lang-switch { color: var(--text-muted); font-size: 0.75rem; cursor: pointer; transition: color 0.3s; white-space: nowrap; }
+        .lang-switch:hover { color: var(--accent-gold); }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 10px 24px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;
+            letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none;
+            cursor: pointer; transition: all 0.3s ease; border: none; outline: none; white-space: nowrap;
+        }
+        .btn-primary { background: var(--accent-gold); color: var(--bg-primary); }
+        .btn-primary:hover { background: var(--accent-gold-hover); box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3); }
+        .btn-outline { background: transparent; color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+        .btn-outline:hover { background: var(--accent-gold); color: var(--bg-primary); }
+        .btn-large { padding: 14px 32px; font-size: 0.85rem; }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-primary); font-size: 1.4rem; cursor: pointer; }
+        
+        .page-header {
+            padding: 120px 24px 60px; text-align: center;
+            background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+        }
+        .page-header-inner { max-width: 800px; margin: 0 auto; }
+        .page-label {
+            display: inline-block; color: var(--accent-gold); font-size: 0.7rem;
+            letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;
+        }
+        .page-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 300; color: var(--text-primary);
+            letter-spacing: 2px; line-height: 1.3; margin-bottom: 16px; word-break: keep-all;
+        }
+        .page-desc { font-size: 1rem; color: var(--text-secondary); line-height: 1.7; word-break: keep-all; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--text-muted); text-decoration: none; font-size: 0.8rem;
+            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 30px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--accent-gold); }
+        
+        .services-section { padding: 60px 24px 80px; max-width: 1200px; margin: 0 auto; }
+        .service-detail-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+            padding: 40px 35px; margin-bottom: 24px; transition: all 0.4s ease;
+            display: grid; grid-template-columns: auto 1fr auto; gap: 30px; align-items: start;
+        }
+        .service-detail-card:hover { border-color: var(--accent-gold); background: var(--bg-hover); }
+        .service-detail-icon {
+            width: 60px; height: 60px; background: rgba(201, 168, 76, 0.08); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;
+        }
+        .service-detail-content { flex: 1; min-width: 0; }
+        .service-detail-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+        .service-detail-title { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); letter-spacing: 1px; word-break: keep-all; }
+        .service-detail-tag {
+            display: inline-block; padding: 3px 10px; background: var(--bg-secondary);
+            border-radius: 3px; font-size: 0.65rem; color: var(--text-muted);
+            letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+        }
+        .service-detail-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; word-break: keep-all; }
+        .service-detail-features { display: flex; flex-wrap: wrap; gap: 8px; }
+        .service-detail-feature {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; background: var(--bg-secondary); border-radius: 4px;
+            font-size: 0.8rem; color: var(--text-muted); word-break: keep-all;
+        }
+        .service-detail-feature::before { content: '✓'; color: var(--accent-gold); font-weight: 700; }
+        .service-detail-price { text-align: right; flex-shrink: 0; min-width: 180px; }
+        .price-from { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .price-value { font-size: 1.8rem; font-weight: 300; color: var(--accent-gold); line-height: 1; white-space: nowrap; }
+        .price-unit { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        .service-detail-cta { margin-top: 16px; }
+        .service-detail-cta .btn { padding: 8px 20px; font-size: 0.7rem; }
+        
+        .cta-section {
+            background: var(--bg-secondary); border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border); padding: 80px 24px; text-align: center;
+        }
+        .cta-section-inner { max-width: 600px; margin: 0 auto; }
+        .cta-title {
+            font-size: 1.5rem; font-weight: 300; color: var(--text-primary);
+            letter-spacing: 2px; margin-bottom: 16px; word-break: keep-all;
+        }
+        .cta-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 30px; word-break: keep-all; }
+        
+        .footer { background: var(--bg-primary); border-top: 1px solid var(--border); padding: 50px 24px 25px; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 35px; margin-bottom: 40px; }
+        .footer-brand { max-width: 280px; }
+        .footer-brand .logo-text { font-size: 1.1rem; margin-bottom: 14px; color: var(--text-primary); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+        .footer-brand p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; word-break: keep-all; }
+        .footer-col h4 { font-size: 0.7rem; color: var(--text-primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 8px; }
+        .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; transition: color 0.3s; word-break: keep-all; }
+        .footer-col a:hover { color: var(--accent-gold); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 25px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted); gap: 20px; }
+        .footer-badges { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+        .footer-badge { padding: 3px 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+        
+        @media (max-width: 1024px) {
+            .service-detail-card { grid-template-columns: auto 1fr; }
+            .service-detail-price { grid-column: 1 / -1; text-align: left; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+            .footer-top { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav { display: none; }
+            .mobile-menu-btn { display: block; }
+            .header-actions .btn { display: none; }
+            .service-detail-card { grid-template-columns: 1fr; padding: 30px 24px; }
+            .service-detail-icon { margin-bottom: 16px; }
+            .service-detail-price { grid-column: auto; text-align: left; flex-direction: column; align-items: flex-start; gap: 8px; }
+            .footer-top { grid-template-columns: 1fr; gap: 30px; }
+            .footer-bottom { flex-direction: column; text-align: center; gap: 16px; }
+            .footer-badges { justify-content: center; }
+            .page-header { padding: 100px 20px 50px; }
+            .services-section { padding: 40px 20px 60px; }
+        }
+        @media (max-width: 480px) {
+            .page-title { font-size: 1.5rem; }
+            .service-detail-card { padding: 25px 18px; }
+            .service-detail-title { font-size: 1.05rem; }
+            .price-value { font-size: 1.5rem; }
+            .footer { padding: 40px 16px 20px; }
+            .header-inner { padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🛡️</div>
+                <div>
+                    <div class="logo-text">Никита International</div>
+                    <div class="logo-sub">Частное охранное предприятие</div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="services.html">Услуги</a></li>
+                    <li><a href="index.html#about">О нас</a></li>
+                    <li><a href="index.html#calc">Расчёт</a></li>
+                    <li><a href="index.html#contacts">Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <span class="lang-switch">RU | EN</span>
+                <a href="index.html#contacts" class="btn btn-primary">Вызвать инженера</a>
+                <button class="mobile-menu-btn">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <div class="page-header-inner">
+            <a href="index.html" class="back-link">← На главную</a>
+            <div class="page-label">Полный перечень</div>
+            <h1 class="page-title">Услуги и цены</h1>
+            <p class="page-desc">Прозрачное ценообразование без скрытых платежей. Все цены указаны ориентировочно и формируются индивидуально под каждый объект.</p>
+        </div>
+    </div>
+
+    <section class="services-section">
+        <div class="service-detail-card animate">
+            <div class="service-detail-icon">🛡️</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Физическая охрана объектов</div>
+                    <div class="service-detail-tag">Для B2B</div>
+                </div>
+                <div class="service-detail-desc">Профессиональная охрана промышленных объектов, офисов, торговых центров, складов и строительных площадок. Круглосуточное дежурство, контроль доступа, патрулирование территории.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Постовая служба 24/7</span>
+                    <span class="service-detail-feature">Контроль доступа</span>
+                    <span class="service-detail-feature">Патрулирование</span>
+                    <span class="service-detail-feature">Охрана периметра</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">1 500 ₽</div>
+                    <div class="price-unit">/ час за пост</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-1">
+            <div class="service-detail-icon">📡</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Пультовая охрана</div>
+                    <div class="service-detail-tag">Для B2B / B2C</div>
+                </div>
+                <div class="service-detail-desc">Подключение объекта на централизованный пульт наблюдения. Мониторинг тревожных сигналов, видеоподтверждение тревог, выезд группы быстрого реагирования.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Мониторинг 24/7</span>
+                    <span class="service-detail-feature">Видеоподтверждение</span>
+                    <span class="service-detail-feature">Выезд ГБР</span>
+                    <span class="service-detail-feature">Мобильное приложение</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">3 000 ₽</div>
+                    <div class="price-unit">/ месяц</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-2">
+            <div class="service-detail-icon">👤</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Личная охрана / Bodyguard</div>
+                    <div class="service-detail-tag">Для частных лиц</div>
+                </div>
+                <div class="service-detail-desc">Профессиональная защита первых лиц компаний, политиков, знаменитостей и их семей. Близкая охрана, сопровождение в поездках, обеспечение безопасности мероприятий.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Близкая охрана</span>
+                    <span class="service-detail-feature">Сопровождение в поездках</span>
+                    <span class="service-detail-feature">Охрана семьи</span>
+                    <span class="service-detail-feature">VIP-обслуживание</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">5 000 ₽</div>
+                    <div class="price-unit">/ час за сотрудника</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-3">
+            <div class="service-detail-icon">🚛</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Сопровождение грузов</div>
+                    <div class="service-detail-tag">Для B2B</div>
+                </div>
+                <div class="service-detail-desc">Организация безопасной транспортировки ценных, опасных и конфиденциальных грузов. Планирование маршрута, сопровождение вооружённой охраной, страхование груза.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Планирование маршрута</span>
+                    <span class="service-detail-feature">Вооружённое сопровождение</span>
+                    <span class="service-detail-feature">GPS-трекинг</span>
+                    <span class="service-detail-feature">Страхование груза</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">3 500 ₽</div>
+                    <div class="price-unit">/ рейс</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-1">
+            <div class="service-detail-icon">📹</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Видеонаблюдение и СКУД</div>
+                    <div class="service-detail-tag">Для B2B / B2C</div>
+                </div>
+                <div class="service-detail-desc">Проектирование, монтаж и обслуживание систем видеонаблюдения и контроля доступа. IP-камеры, аналитика, распознавание лиц, интеграция с охранными системами.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">IP-камеры 4K</span>
+                    <span class="service-detail-feature">Распознавание лиц</span>
+                    <span class="service-detail-feature">СКУД / турникеты</span>
+                    <span class="service-detail-feature">Удалённый доступ</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">15 000 ₽</div>
+                    <div class="price-unit">/ точка монтажа</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-2">
+            <div class="service-detail-icon">💻</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Кибербезопасность</div>
+                    <div class="service-detail-tag">Для B2B</div>
+                </div>
+                <div class="service-detail-desc">Комплексная защита информационной инфраструктуры компании. Аудит ИБ, тестирование на проникновение, внедрение SIEM, обучение сотрудников, реагирование на инциденты.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Аудит ИБ</span>
+                    <span class="service-detail-feature">Pentest</span>
+                    <span class="service-detail-feature">SIEM / SOC</span>
+                    <span class="service-detail-feature">Обучение персонала</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">80 000 ₽</div>
+                    <div class="price-unit">/ аудит</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-3">
+            <div class="service-detail-icon">📊</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Аудит безопасности</div>
+                    <div class="service-detail-tag">Для B2B</div>
+                </div>
+                <div class="service-detail-desc">Независимая оценка системы безопасности вашего объекта. Выявление уязвимостей, разработка концепции защиты, подготовка к проверкам регуляторов.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Выездная оценка</span>
+                    <span class="service-detail-feature">Выявление рисков</span>
+                    <span class="service-detail-feature">Концепция защиты</span>
+                    <span class="service-detail-feature">Подготовка к проверкам</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">50 000 ₽</div>
+                    <div class="price-unit">/ объект</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-4">
+            <div class="service-detail-icon">🔥</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Пожарная безопасность</div>
+                    <div class="service-detail-tag">Для B2B / B2C</div>
+                </div>
+                <div class="service-detail-desc">Монтаж и обслуживание систем пожарной сигнализации, оповещения и пожаротушения. Проверка готовности к эвакуации, обучение персонала правилам пожарной безопасности.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Пожарная сигнализация</span>
+                    <span class="service-detail-feature">Системы тушения</span>
+                    <span class="service-detail-feature">Оповещение</span>
+                    <span class="service-detail-feature">Обучение персонала</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">25 000 ₽</div>
+                    <div class="price-unit">/ объект</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-1">
+            <div class="service-detail-icon">🎭</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Охрана мероприятий</div>
+                    <div class="service-detail-tag">Для B2B / B2C</div>
+                </div>
+                <div class="service-detail-desc">Обеспечение безопасности корпоративных мероприятий, концертов, выставок, частных вечеринок и свадеб. Контроль входа, охрана периметра, разрешение конфликтных ситуаций.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Контроль входа</span>
+                    <span class="service-detail-feature">Досмотр</span>
+                    <span class="service-detail-feature">Охрана периметра</span>
+                    <span class="service-detail-feature">Координация</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">1 800 ₽</div>
+                    <div class="price-unit">/ час за сотрудника</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+
+        <div class="service-detail-card animate animate-delay-2">
+            <div class="service-detail-icon">🎓</div>
+            <div class="service-detail-content">
+                <div class="service-detail-header">
+                    <div class="service-detail-title">Обучение и тренинги</div>
+                    <div class="service-detail-tag">Для B2B</div>
+                </div>
+                <div class="service-detail-desc">Проведение тренингов по антитеррористической защищённости, кибербезопасности, оказанию первой помощи, действиям при ЧС. Практические занятия с сертификацией.</div>
+                <div class="service-detail-features">
+                    <span class="service-detail-feature">Антитеррор</span>
+                    <span class="service-detail-feature">Кибербезопасность</span>
+                    <span class="service-detail-feature">Первая помощь</span>
+                    <span class="service-detail-feature">Сертификация</span>
+                </div>
+            </div>
+            <div class="service-detail-price">
+                <div>
+                    <div class="price-from">Стоимость от</div>
+                    <div class="price-value">25 000 ₽</div>
+                    <div class="price-unit">/ группа до 20 человек</div>
+                </div>
+                <div class="service-detail-cta"><a href="index.html#contacts" class="btn btn-outline">Заказать</a></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-section-inner animate">
+            <h2 class="cta-title">Нужна индивидуальная консультация?</h2>
+            <p class="cta-desc">Наш инженер безопасности бесплатно выедет на ваш объект, оценит риски и подготовит коммерческое предложение.</p>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px;">Или позвоните: <a href="tel:+79771952553" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">+7 (977) 195-25-53</a></p>
+            <a href="index.html#contacts" class="btn btn-primary btn-large">Получить аудит рисков</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="logo-text">Никита International</div>
+                    <p>Частное охранное предприятие премиум-класса. Комплексная защита бизнеса и частных лиц с 2011 года.</p>
+                    <p style="margin-top: 10px; color: var(--accent-gold); font-size: 0.85rem;">📞 <a href="tel:+79771952553" style="color: var(--accent-gold); text-decoration: none;">+7 (977) 195-25-53</a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Услуги</h4>
+                    <ul>
+                        <li><a href="#">Физическая охрана</a></li>
+                        <li><a href="#">Пультовая охрана</a></li>
+                        <li><a href="#">Личная охрана</a></li>
+                        <li><a href="#">Видеонаблюдение</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Компания</h4>
+                    <ul>
+                        <li><a href="index.html#about">О нас</a></li>
+                        <li><a href="#">Лицензии</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Новости</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Поддержка</h4>
+                    <ul>
+                        <li><a href="index.html#contacts">Контакты</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Политика конфиденциальности</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div>© 2026 Никита International. Все права защищены.</div>
+                <div class="footer-badges">
+                    <span class="footer-badge">Лицензия на ЧОД</span>
+                    <span class="footer-badge">ISO 18788</span>
+                    <span class="footer-badge">ISO 9001</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+        
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 100) {
+                header.style.background = 'rgba(10, 10, 10, 0.98)';
+                header.style.boxShadow = '0 4px 30px rgba(0,0,0,0.3)';
+            } else {
+                header.style.background = 'rgba(10, 10, 10, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
